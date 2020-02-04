@@ -2,9 +2,18 @@ const Hapi = require('@hapi/hapi');
 const { ApolloServer } = require('apollo-server-hapi');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
+const GoodreadsApi = require('./dataSources/goodreads');
+
+const dataSources = () => ({
+  goodreadsApi: new GoodreadsApi(),
+});
 
 async function start() {
-  const apolloServer = new ApolloServer({ typeDefs, resolvers });
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    dataSources, // these will be exposed to the resolvers via `context`
+  });
 
   const hapiServer = new Hapi.server({
     port: 4000,

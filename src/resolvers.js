@@ -6,7 +6,7 @@
   or graph database, a micro-service, and a REST API. Resolvers can also return
   strings, ints, null, and other primitives.
 */
-const { authors, books } = require('./utils/sampleData');
+// const { authors, books } = require('./utils/sampleData');
 
 const resolvers = {
   Query: {
@@ -21,7 +21,8 @@ const resolvers = {
         context: An object shared by all resolvers in a GraphQL operation. We use the context to contain per-request state such as authentication information and access our data sources.
         info: Information about the execution state of the operation which should only be used in advanced cases
       */
-      return authors.find((a => a.id === args.id));
+
+      return context.dataSources.goodreadsApi.getAuthor(args.id);
     },
   },
 
@@ -38,7 +39,7 @@ const resolvers = {
         This could simply be rewritten as the following since we don't need the extra args:
           books: async (author) => {
       */
-      return books.filter(b => b.authorId === parent.id);
+      return context.dataSources.goodreadsApi.getBooks(parent.id);
     },
   },
 };
